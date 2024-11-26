@@ -97,7 +97,21 @@
         </div>
     </th:block>
 
-    <script>
+    <script th:inline="javascript">
+
+        $(document).ready(function () {
+
+        $(".updateMoveBtn").on("click", function () {
+                location.href = "/admin/item/update?id=" + $(this).val();
+            })
+        })
+
+        $(".delMoveBtn").on("click", function () {
+                location.href = "/admin/item/update?id=" + $(this).val();
+        })
+
+
+
         $(".newproduct").on("click", function () {
             location.href = "/admin/item/new";
         })
