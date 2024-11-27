@@ -44,16 +44,19 @@
                             <label for="itemDetail" class="form-label">상세설명 </label>
                             <textarea class="form-control" th:field="*{itemDetail}" id="itemDetail" rows="3" readonly></textarea>
                             <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError"></p>
+
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="itemSellStatus" class="form-label">상품 판매 상태 </label>
                             <input  th:field="*{itemSellStatus}" id="itemSellStatus" class="form-control"  readonly>
+
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="mb-3 imgA">
+
                             <div class="row mb-5">
                                 <th:block th:each="img: ${itemDTO.itemImgDTOList}">
                                     <th:block th:if="${img.repimgYn == 'Y'}">
@@ -61,6 +64,7 @@
                                             대표이미지
                                             <img width="100%" th:src="${img.imgUrl}">
                                         </div>
+
                                     </th:block>
                                 </th:block>
                             </div>
@@ -80,10 +84,9 @@
                     </div>
 
                     <div class="col-12">
-                       <button type="button" class="btn btn-dark updatebtn">수정</button>
-                       <button type="button">목록</button>
+                        <button type="button" class="btn btn-dark updatebtn">수정</button>
+                        <button type="button">목록</button>
                     </div>
-
                 </div>
 
             </div>
@@ -94,15 +97,20 @@
 </th:block>
 
 <th:block layout:fragment="script">
+
     <script th:inline="javascript">
         let itemid = [[${itemDTO.id}]]
+
         $(document).ready(function () {
             $(".updatebtn").on("click", function () {
                 location.href = "/admin/item/update?id=" + itemid
             })
         })
 
+
+
     </script>
+
 
 </th:block>
 

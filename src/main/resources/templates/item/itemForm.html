@@ -80,7 +80,13 @@
 
                     <div class="col-12">
                        <button class="btn btn-dark">저장</button>
-                       <button type="button">목록</button>
+                       <button type="button" class="btn btn-dark listbtn">목록</button>
+                       <script>
+                           $(".listbtn").on("click", function () {
+                               location.href = "/admin/item/list";
+                           })
+                       </script>
+
                     </div>
                 </div>
 

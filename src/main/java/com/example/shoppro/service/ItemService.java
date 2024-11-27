@@ -156,7 +156,47 @@ public class ItemService {
     }
 
 
+    public void remove(Long id){
+        log.info("서비스로 들어온 삭제할 아이템 번호 : " + id);
 
+        itemRepository.deleteById(id);
+
+        //삭제를 테스트 할 수 있는 조건 만들기
+
+
+    }
+
+
+    public PageResponseDTO<ItemDTO> mainlist(PageRequestDTO pageRequestDTO) {
+
+        //일단 기본으로 전부 가져오기
+//        List<Item> list =
+//        itemRepository.findAll();
+//
+//        List<ItemDTO> itemDTOList =
+//        list.stream().map(
+//                item -> modelMapper.map(item , ItemDTO.class)
+//        ).collect(Collectors.toList());
+//
+//        return itemDTOList;
+
+
+//        itemRepository.getAdminItemPage();
+        Pageable pageable = pageRequestDTO.getPageable("id");
+        Page<Item> items =
+                itemRepository.getAdminItemPage(pageRequestDTO, pageable);
+        List<ItemDTO> itemDTOPage =
+                items.getContent().stream().map(item -> modelMapper.map(item, ItemDTO.class))
+                        .collect(Collectors.toList());
+
+        PageResponseDTO<ItemDTO> itemDTOPageResponseDTO
+                = PageResponseDTO.<ItemDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(itemDTOPage)
+                .total((int) items.getTotalElements())
+                .build();
+        return itemDTOPageResponseDTO;
+    }
 
 
 

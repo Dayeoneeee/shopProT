@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>환영하오</title>
+</head>
+<body>
+    <th:block layout:fragment="content">
+
+        <div class="row">
+            <div class="col">
+                이곳은 이미지 들어갈 자리!! <br>
+                이곳은 이미지 들어갈 자리!! <br>
+                이곳은 이미지 들어갈 자리!! <br>
+                이곳은 이미지 들어갈 자리!! <br>
+            </div>
+        </div>
+
+        <th:block th:if="${#lists.isEmpty(pageResponseDTO.dtoList)}">
+            <div class="row row-cols-md-3">
+                <div class="col">
+
+                </div>
+            </div>
+        </th:block>
+
+
+        <th:block th:unless="${#lists.isEmpty(pageResponseDTO.dtoList)}">
+            <div class="row row-cols-md-3">
+
+                <th:block th:each="dto: ${pageResponseDTO.dtoList}">
+                    <div class="col mb-3">
+                        <a th:href="@{/item/read(id=${dto.id})}">
+                            <div class="card">
+                                <img src="..." class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${dto.itemNm}">Card title</h5>
+                                    <p class="card-text text-truncate" th:text="${dto.itemDetail}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <p class="card-text" th:text="${dto.price+'원'}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
+
+    </th:block>
+</body>
+</html>
