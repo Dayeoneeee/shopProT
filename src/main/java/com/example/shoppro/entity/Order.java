@@ -42,6 +42,10 @@ public class Order extends BaseTimeEntity {
                orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderItem> orderItemList = new ArrayList<>();
 
+    public void setOrderItemList(OrderItem item) {
+        this.orderItemList.add(item);
+    }
+
     private LocalDateTime orderDate;        //주문일
 
     @Enumerated(EnumType.STRING)
