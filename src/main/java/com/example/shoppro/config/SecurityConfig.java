@@ -30,6 +30,7 @@ public class SecurityConfig {
                                 .requestMatchers("/board/register").authenticated() // 로그인 한 사람만 접속 가능
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/user/list").hasRole("ADMIN")
+                                .requestMatchers("/order/**").authenticated()
                                 .anyRequest().permitAll()       // 그외 다 열어
 //                            .anyRequest().authenticated()   //그 이외에는 다 로그인해서 접속해
 
