@@ -1,5 +1,6 @@
 package com.example.shoppro.entity;
 
+import com.example.shoppro.dto.CartItemDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,4 +30,21 @@ public class CartItem {
     //수량. 구매수량. 장바구니에 담긴 수량
     //아이템 한 row당
     private int count;
+
+
+    public static CartItem createCatrItem(Cart cart, Item item, int count){
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setItem(item);
+        cartItem.setCount(count);
+
+        return cartItem;
+
+    }
+
+    //count 증가
+    public void addCount(int count){
+        this.count += count;
+
+    }
 }

@@ -26,4 +26,13 @@ public class Cart {
     //설정하지 않으면 JPA가 알아서 id를 찾지만 컬럼명이 원하는대로
     //생성되지 않을 수 있기 때문
 
+    //카트 생성 메소드
+    //이 메소드는 정적메소드로 실행시 Member타입의 객체를 입력받아(파라미터)
+    //Cart를 반환한다.
+    public static Cart createCart(Member member){
+        Cart cart = new Cart();
+        cart.setMember(member);
+        return cart;
+    }
+
 }
