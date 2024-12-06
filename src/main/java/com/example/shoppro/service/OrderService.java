@@ -2,10 +2,12 @@ package com.example.shoppro.service;
 
 import ch.qos.logback.core.util.StringUtil;
 import com.example.shoppro.constant.OrderStatus;
+import com.example.shoppro.dto.CartOrderDTO;
 import com.example.shoppro.dto.OrderDTO;
 import com.example.shoppro.dto.OrderHistDTO;
 import com.example.shoppro.dto.OrderItemDTO;
 import com.example.shoppro.entity.*;
+import com.example.shoppro.repository.CartItemRepository;
 import com.example.shoppro.repository.ItemRepository;
 import com.example.shoppro.repository.MemberRepository;
 import com.example.shoppro.repository.OrderRepository;
@@ -13,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.type.OrderedSetType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +36,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
+
 
     //주문 //order, orderItem이 있다
     //주문할 아이템, 주문할 수량, 주문하는 사람 << 이런게 있는게 아니라
@@ -139,6 +143,45 @@ public class OrderService {
             return null;
         }
 
+    }
+
+    public Long orders(List<OrderDTO> orderDTOList, String email){
+
+        //주문을 했다면 판매하고 있는 상품의 수량 변경
+
+
+
+        Member member = memberRepository.findByEmail(email);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        Order order = new Order();
+
+
+        for (OrderDTO orderDTO : orderDTOList){
+
+            Item item=
+            itemRepository.findById(orderDTO.getItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            OrderItem orderItem =new OrderItem();
+            orderItem.setItem(item);
+            orderItem.setCount(orderDTO.getCount()  );
+            orderItem.setOrderPrice(item.getPrice());
+            orderItem.setOrder(order);
+
+            item.setStockNumber(item.getStockNumber() - orderDTO.getCount()  );
+
+
+            orderItemList.add(orderItem);
+        }
+        order.setMember(member);
+        order.setOrderStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+        order.setOrderItemList(orderItemList);
+
+
+        orderRepository.save(order);
+
+        return order.getId();
     }
 
     //구매이력

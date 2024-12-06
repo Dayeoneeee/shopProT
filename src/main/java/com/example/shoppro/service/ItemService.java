@@ -186,7 +186,9 @@ public class ItemService {
         Page<Item> items =
                 itemRepository.getAdminItemPage(pageRequestDTO, pageable);
         List<ItemDTO> itemDTOPage =
-                items.getContent().stream().map(item -> modelMapper.map(item, ItemDTO.class))
+                items.getContent().stream().map(item -> modelMapper.map(item, ItemDTO.class).setItemImgDTOList(
+                            item.getItemImgList()
+                        )  )
                         .collect(Collectors.toList());
 
         PageResponseDTO<ItemDTO> itemDTOPageResponseDTO

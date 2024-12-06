@@ -32,7 +32,7 @@ public class CartItem {
     private int count;
 
 
-    public static CartItem createCatrItem(Cart cart, Item item, int count){
+    public static CartItem createCartItem(Cart cart, Item item, int count){
         CartItem cartItem = new CartItem();
         cartItem.setCart(cart);
         cartItem.setItem(item);

@@ -24,41 +24,43 @@
             <h4 th:text="${#temporals.format(orderHistDTO.orderDate, 'yyyy-MMM-dd HH:mm')} + ' 주문'"></h4>
             <div class="ms-3">
 
-                <th:block th:if="${orderHistDTO.orderStatus.name() == 'ORDER'}">
-                    <button type="button" th:value="${orderHistDTO.orderId}" class="cancelbtn"> 주문취소</button>
-                </th:block>
-                <th:block th:unless="${orderHistDTO.orderStatus.name() == 'ORDER'}">
-                    <h4>(취소 완료)</h4>
-                </th:block>
+                <div class="row">
 
-
-                <div class="card">
-                    <div class="row">
-
-                        <th:block th:each="orderItemDTO: ${orderHistDTO.orderItemDTOList}">
-                            <div class="col" >
-                                <img  style="width: 100px;height: 100px" th:src="${orderItemDTO.imgUrl}" th:alt="${orderItemDTO.itemNm}">
+                    <div class="col shadow mb-4 p-3">
+                        <th:block th:if="${orderHistDTO.orderStatus.name() == 'ORDER'}">
+                            <div class="row">
+                                <div class="col text-end">
+                                    <button type="button" th:value="${orderHistDTO.orderId}" class="cancelbtn"> 주문취소</button>
+                                </div>
                             </div>
-
-                            <div class="col">
-                                <strong><span th:text="${orderItemDTO.itemNm}" ></span></strong>
-                                <span th:text="${orderItemDTO.orderPrice} + '원'"></span>
-                                <span th:text="${orderItemDTO.count} + '개'"></span>
-
-
-                            </div>
-
                         </th:block>
+                        <th:block th:unless="${orderHistDTO.orderStatus.name() == 'ORDER'}">
+                            <h4>(취소 완료)</h4>
+                        </th:block>
+                        <th:block th:each="orderItemDTO: ${orderHistDTO.orderItemDTOList}">
 
+                            <div class="card">
 
+                                <div class="row align-items-center">
+                                    <div class="col-4" >
+                                        <img  style="width: 100px;height: 100px" th:src="${orderItemDTO.imgUrl}" th:alt="${orderItemDTO.itemNm}">
+                                    </div>
 
+                                    <div class="col-8">
+                                        <strong><span th:text="${orderItemDTO.itemNm}" ></span></strong>
+                                        <span th:text="${orderItemDTO.orderPrice} + '원'"></span>
+                                        <span th:text="${orderItemDTO.count} + '개'"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </th:block>
 
                     </div>
                 </div>
 
 
             </div>
-
 
         </th:block>
 

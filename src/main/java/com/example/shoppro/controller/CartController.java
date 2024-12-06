@@ -2,6 +2,8 @@ package com.example.shoppro.controller;
 
 import com.example.shoppro.dto.CartDetailDTO;
 import com.example.shoppro.dto.CartItemDTO;
+import com.example.shoppro.dto.CartOrderDTO;
+import com.example.shoppro.service.CartItemService;
 import com.example.shoppro.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+    private final CartItemService cartItemService;
 
     //장바구니에 등록
     @PostMapping("/cart")
@@ -37,6 +39,7 @@ public class CartController {
         if (bindingResult.hasErrors()){
 
             StringBuffer sb = new StringBuffer();
+
             List<FieldError> fieldErrorList
                     = bindingResult.getFieldErrors();
 
@@ -80,7 +83,84 @@ public class CartController {
         //사용자에게 보여줄 장바구니 목록중에 CartDetailDTO(꼭 필요한 정보만 가공한 DTO) 로 담은 List
         model.addAttribute("cartDetailDTOList", cartDetailDTOList);
 
+        log.info(cartDetailDTOList);
 
         return "cart/cartList";
     }
+
+    @PostMapping("/cartItem")
+    public ResponseEntity updateCartItem(@Valid CartItemDTO cartItemDTO, BindingResult bindingResult, Principal principal){
+
+
+        String email = principal.getName();
+
+
+
+        log.info("수량변경을 위해서 넘어온 값 : " + cartItemDTO);
+        if (bindingResult.hasErrors()){
+
+        }
+
+        //service에서 cartItemId를 통해서 cartItem을 찾아서
+        //카트 아이템의 수량을 현재 받은 cartItemDTO의 count로 변경
+
+        try {
+            cartItemService.updateCartItemId(cartItemDTO, email);
+
+        } catch (Exception e){
+            return new ResponseEntity<String>("장바구니 수량변경이 잘못되었습니다. 고객센터에 문의하세요.",HttpStatus.OK);
+
+        }
+
+        return new ResponseEntity<Long>(cartItemDTO.getItemid(),HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/cartItem/{cartItemid}")
+    public ResponseEntity deleteCartItem (@PathVariable("cartItemid")Long cartItemid,
+                                          Principal principal){
+
+        if(!cartService.validateCartItem(cartItemid, principal.getName())){
+
+            return new ResponseEntity<String>("수정권한 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        //장바구니 아이템 삭제
+        cartService.deleteCartItem(cartItemid);
+
+        return new ResponseEntity<Long>(cartItemid, HttpStatus.OK);
+
+    }
+
+
+    @PostMapping("/cart/orders")
+    public ResponseEntity orderCartItem(@RequestBody CartOrderDTO cartOrderDTO, Principal principal){
+
+        log.info(cartOrderDTO);
+
+
+        List<CartOrderDTO> cartOrderDTOList = cartOrderDTO.getOrderDTOList();
+
+        if (cartOrderDTOList == null || cartOrderDTOList.size() == 0){
+
+            return new ResponseEntity<String>("주문할 상품을 선택해주세요.", HttpStatus.FORBIDDEN);
+        }
+
+        for ( CartOrderDTO cartOrder : cartOrderDTOList){
+
+            if ( !cartService.validateCartItem(cartOrder.getCartItemId(), principal.getName()) ){
+                return new ResponseEntity<String>("주문권한이 없습니다." , HttpStatus.FORBIDDEN);
+            }
+        }
+
+//        Long orderId = cartService.
+
+        Long orderId = cartService.orderCartItem(cartOrderDTOList, principal.getName());
+
+        return new ResponseEntity<Long>(1L, HttpStatus.OK);
+
+    }
+
+
+
 }

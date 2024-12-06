@@ -10,6 +10,7 @@
 <body>
     <th:block layout:fragment="content">
 
+
         <div class="row">
             <div class="col">
                 이곳은 이미지 들어갈 자리!! <br>
@@ -35,7 +36,14 @@
                     <div class="col mb-3">
                         <a th:href="@{/item/read(id=${dto.id})}">
                             <div class="card">
-                                <img src="..." class="card-img-top" alt="...">
+                                <div class="col">
+                                    <th:block th:each="img:${dto.itemImgDTOList}">
+                                        <th:block th:if="${img.repimgYn == 'Y'}">
+                                            <img th:src="${img.imgUrl}" class="card-img-top" th:alt="${dto.itemNm}">
+                                        </th:block>
+                                    </th:block>
+                                </div>
+
                                 <div class="card-body">
                                     <h5 class="card-title" th:text="${dto.itemNm}">Card title</h5>
                                     <p class="card-text text-truncate" th:text="${dto.itemDetail}">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
